@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Grand Theft Biryani — a small browser-based Hyderabad open-world prototype." />
+  <title>Grand Theft Biryani</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="game-root">
+    <canvas id="game-canvas" aria-label="Grand Theft Biryani game canvas"></canvas>
+
+    <div id="loading-screen" class="screen visible">
+      <div class="loading-card">
+        <div class="title-stack" aria-label="Grand Theft Biryani">
+          <span>GRAND THEFT</span>
+          <strong>BIRYANI</strong>
+        </div>
+        <div class="loading-track"><div id="loading-bar"></div></div>
+        <p id="loading-copy">Preparing Old City…</p>
+      </div>
+    </div>
+
+    <div id="main-menu" class="screen">
+      <div class="menu-panel">
+        <div class="title-stack large">
+          <span>GRAND THEFT</span>
+          <strong>BIRYANI</strong>
+        </div>
+        <nav class="menu-actions" aria-label="Main menu">
+          <button id="continue-btn" type="button">Continue</button>
+          <button id="new-game-btn" type="button">New Game</button>
+          <button id="mission-select-btn" type="button">Mission Select</button>
+          <button id="settings-btn" type="button">Settings</button>
+          <button id="reset-btn" class="subtle" type="button">Reset Progress</button>
+        </nav>
+        <p class="menu-note">Keyboard and mouse recommended</p>
+      </div>
+    </div>
+
+    <div id="mission-menu" class="screen modal-screen">
+      <div class="dialog">
+        <h2>Mission Select</h2>
+        <button id="mission-one-btn" class="mission-card" type="button">
+          <span>01</span>
+          <div><strong>The Pickup</strong><small>Collect the parcel and deliver it to the garage.</small></div>
+        </button>
+        <button class="mission-card locked" type="button" disabled>
+          <span>02</span>
+          <div><strong>Borrowed Wheels</strong><small>Coming in the next build.</small></div>
+        </button>
+        <button id="mission-back-btn" class="subtle" type="button">Back</button>
+      </div>
+    </div>
+
+    <div id="settings-menu" class="screen modal-screen">
+      <div class="dialog">
+        <h2>Settings</h2>
+        <label class="setting-row"><span>Camera sensitivity</span><input id="sensitivity" type="range" min="0.25" max="1.5" step="0.05" value="0.75" /></label>
+        <label class="setting-row"><span>Traffic</span><input id="traffic-toggle" type="checkbox" checked /></label>
+        <label class="setting-row"><span>Pedestrians</span><input id="pedestrian-toggle" type="checkbox" checked /></label>
+        <button id="settings-back-btn" class="subtle" type="button">Back</button>
+      </div>
+    </div>
+
+    <div id="pause-menu" class="screen modal-screen">
+      <div class="dialog compact">
+        <h2>Paused</h2>
+        <button id="resume-btn" type="button">Resume</button>
+        <button id="restart-mission-btn" type="button">Restart Mission</button>
+        <button id="save-quit-btn" class="subtle" type="button">Save and Main Menu</button>
+      </div>
+    </div>
+
+    <div id="hud" class="hidden" aria-live="polite">
+      <div class="hud-top">
+        <div class="status-card">
+          <div class="health-row"><span>HEALTH</span><div class="health-track"><div id="health-fill"></div></div></div>
+          <div class="money" id="money">₹ 250</div>
+        </div>
+        <div class="wanted" id="wanted" aria-label="Wanted level">☆ ☆ ☆</div>
+      </div>
+
+      <div id="objective-card" class="objective-card">
+        <small>MISSION</small>
+        <strong id="mission-title">The Pickup</strong>
+        <p id="mission-objective">Head to the biryani shop.</p>
+      </div>
+
+      <div id="interaction-prompt" class="interaction-prompt hidden">Press <kbd>E</kbd> to interact</div>
+      <div id="toast" class="toast"></div>
+
+      <div class="controls-help">
+        <span><kbd>WASD</kbd> Move</span>
+        <span><kbd>Shift</kbd> Run</span>
+        <span><kbd>E</kbd> Interact / vehicle</span>
+        <span><kbd>Mouse</kbd> Camera</span>
+        <span><kbd>Esc</kbd> Pause</span>
+      </div>
+
+      <canvas id="minimap" width="180" height="180" aria-label="Neighbourhood minimap"></canvas>
+    </div>
+  </div>
+
+  <script type="module" src="./js/game.js"></script>
+</body>
+</html>

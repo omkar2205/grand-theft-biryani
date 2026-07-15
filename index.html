@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Grand Theft Biryani — a small browser-based Hyderabad open-world prototype." />
+  <meta name="theme-color" content="#15120f" />
   <title>Grand Theft Biryani</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -103,6 +104,19 @@
     </div>
   </div>
 
+  <!--
+    GitHub Pages is currently serving the source branch directly. The import map
+    makes the browser able to resolve the same pinned Three.js package that Vite
+    uses during the GitHub Actions build.
+  -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js"
+      }
+    }
+  </script>
+
   <script>
     (() => {
       const compatibilityMode = new URLSearchParams(window.location.search).get('compat') === '1';
@@ -121,7 +135,7 @@
         return originalGetContext.call(this, type, attributes);
       };
 
-      const showStartupHelp = (message) => {
+      const showStartupHelp = (message, detail = '') => {
         const loading = document.querySelector('#loading-screen');
         const copy = document.querySelector('#loading-copy');
         const bar = document.querySelector('#loading-bar');
@@ -131,9 +145,9 @@
         if (bar) { bar.style.width = '100%'; bar.style.background = '#aa3529'; }
 
         const help = document.createElement('p');
-        help.textContent = compatibilityMode
-          ? 'Open this page directly in Chrome or Edge and make sure hardware acceleration is enabled.'
-          : 'The browser blocked the 3D renderer. Try the lower-power compatibility mode.';
+        help.textContent = detail || (compatibilityMode
+          ? 'Reload the page once. If the problem remains, the required game file may be blocked by the network.'
+          : 'Try the lower-power compatibility mode.');
         help.style.cssText = 'max-width:360px;margin:.85rem auto 1rem;color:rgba(248,241,223,.72);font-size:.86rem;line-height:1.55';
 
         const retry = document.createElement('button');
@@ -144,6 +158,7 @@
         retry.addEventListener('click', () => {
           const url = new URL(window.location.href);
           if (!compatibilityMode) url.searchParams.set('compat', '1');
+          url.searchParams.set('v', Date.now().toString());
           window.location.href = url.toString();
         });
 
@@ -151,11 +166,20 @@
         help.insertAdjacentElement('afterend', retry);
       };
 
-      window.addEventListener('error', () => showStartupHelp('3D graphics could not start in this browser.'), true);
-      window.addEventListener('unhandledrejection', () => showStartupHelp('The game could not finish starting.'));
-      window.setTimeout(() => showStartupHelp('The game is taking longer than expected to start.'), 12000);
+      window.addEventListener('error', event => {
+        const isResourceFailure = event.target && event.target !== window;
+        const detail = isResourceFailure
+          ? 'A required game file could not be downloaded. Check the connection and reload.'
+          : (event.message || 'The browser stopped the game during startup.');
+        showStartupHelp('The game could not finish starting.', detail);
+      }, true);
+      window.addEventListener('unhandledrejection', event => {
+        const detail = event.reason?.message || 'A startup task failed before the main menu loaded.';
+        showStartupHelp('The game could not finish starting.', detail);
+      });
+      window.setTimeout(() => showStartupHelp('The game is taking longer than expected to start.'), 15000);
     })();
   </script>
-  <script type="module" src="js/game.js"></script>
+  <script type="module" src="js/game.js?v=3"></script>
 </body>
 </html>

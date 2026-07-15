@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Grand Theft Biryani — a small browser-based Hyderabad open-world prototype." />
   <title>Grand Theft Biryani</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div id="game-root">
@@ -103,6 +103,59 @@
     </div>
   </div>
 
-  <script type="module" src="./js/game.js"></script>
+  <script>
+    (() => {
+      const compatibilityMode = new URLSearchParams(window.location.search).get('compat') === '1';
+      const originalGetContext = HTMLCanvasElement.prototype.getContext;
+
+      HTMLCanvasElement.prototype.getContext = function getSafeContext(type, attributes) {
+        if (type === 'webgl2' || type === 'webgl' || type === 'experimental-webgl') {
+          const safeAttributes = {
+            ...(attributes || {}),
+            failIfMajorPerformanceCaveat: false,
+            powerPreference: compatibilityMode ? 'low-power' : 'default',
+          };
+          if (compatibilityMode) safeAttributes.antialias = false;
+          return originalGetContext.call(this, type, safeAttributes);
+        }
+        return originalGetContext.call(this, type, attributes);
+      };
+
+      const showStartupHelp = (message) => {
+        const loading = document.querySelector('#loading-screen');
+        const copy = document.querySelector('#loading-copy');
+        const bar = document.querySelector('#loading-bar');
+        if (!loading?.classList.contains('visible') || !copy || document.querySelector('#startup-retry')) return;
+
+        copy.textContent = message;
+        if (bar) { bar.style.width = '100%'; bar.style.background = '#aa3529'; }
+
+        const help = document.createElement('p');
+        help.textContent = compatibilityMode
+          ? 'Open this page directly in Chrome or Edge and make sure hardware acceleration is enabled.'
+          : 'The browser blocked the 3D renderer. Try the lower-power compatibility mode.';
+        help.style.cssText = 'max-width:360px;margin:.85rem auto 1rem;color:rgba(248,241,223,.72);font-size:.86rem;line-height:1.55';
+
+        const retry = document.createElement('button');
+        retry.id = 'startup-retry';
+        retry.type = 'button';
+        retry.textContent = compatibilityMode ? 'Reload Game' : 'Retry in Compatibility Mode';
+        retry.style.cssText = 'display:block;width:min(100%,320px);margin:.6rem auto 0;text-align:center;border-left-color:#d99125';
+        retry.addEventListener('click', () => {
+          const url = new URL(window.location.href);
+          if (!compatibilityMode) url.searchParams.set('compat', '1');
+          window.location.href = url.toString();
+        });
+
+        copy.insertAdjacentElement('afterend', help);
+        help.insertAdjacentElement('afterend', retry);
+      };
+
+      window.addEventListener('error', () => showStartupHelp('3D graphics could not start in this browser.'), true);
+      window.addEventListener('unhandledrejection', () => showStartupHelp('The game could not finish starting.'));
+      window.setTimeout(() => showStartupHelp('The game is taking longer than expected to start.'), 12000);
+    })();
+  </script>
+  <script type="module" src="js/game.js"></script>
 </body>
 </html>

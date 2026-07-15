@@ -1,0 +1,17 @@
+{
+  "name": "grand-theft-biryani",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --base=./",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "three": "0.161.0"
+  },
+  "devDependencies": {
+    "vite": "5.4.14"
+  }
+}

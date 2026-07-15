@@ -1,0 +1,81 @@
+:root {
+  --ink: #171512;
+  --paper: #efe4cc;
+  --cream: #f8f1df;
+  --saffron: #d99125;
+  --chilli: #aa3529;
+  --green: #2f5e4f;
+  --muted: rgba(248, 241, 223, 0.7);
+}
+
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #15120f; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--cream); }
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+#game-root, #game-canvas { width: 100%; height: 100%; display: block; }
+#game-canvas { outline: none; }
+
+.screen { position: fixed; inset: 0; z-index: 30; display: none; align-items: center; justify-content: center; background: radial-gradient(circle at 70% 25%, rgba(165, 69, 34, 0.26), transparent 42%), linear-gradient(135deg, rgba(20, 16, 12, 0.9), rgba(10, 9, 8, 0.97)); }
+.screen.visible { display: flex; }
+.modal-screen { background: rgba(8, 7, 6, 0.78); backdrop-filter: blur(8px); }
+
+.loading-card, .menu-panel, .dialog { width: min(90vw, 440px); }
+.loading-card { text-align: center; }
+.menu-panel { margin-left: min(7vw, 110px); margin-right: auto; }
+.title-stack { display: inline-flex; flex-direction: column; line-height: .82; letter-spacing: .035em; text-transform: uppercase; transform: rotate(-2deg); text-shadow: 0 8px 28px rgba(0,0,0,.4); }
+.title-stack span { font-weight: 900; font-size: clamp(1.45rem, 4vw, 2.5rem); letter-spacing: .12em; }
+.title-stack strong { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: clamp(3.8rem, 12vw, 8rem); color: var(--saffron); -webkit-text-stroke: 1px rgba(255,255,255,.16); }
+.title-stack.large { margin-bottom: 3rem; }
+
+.loading-track { height: 5px; width: min(78vw, 360px); margin: 2.7rem auto 1rem; background: rgba(255,255,255,.13); overflow: hidden; }
+#loading-bar { width: 0; height: 100%; background: var(--saffron); transition: width .25s ease; }
+#loading-copy, .menu-note { color: var(--muted); font-size: .84rem; letter-spacing: .08em; text-transform: uppercase; }
+
+.menu-actions { display: grid; gap: .6rem; width: min(310px, 100%); }
+button { border: 0; border-left: 4px solid transparent; border-radius: 0; padding: .86rem 1rem; text-align: left; color: var(--cream); background: rgba(255,255,255,.08); font-weight: 800; letter-spacing: .045em; text-transform: uppercase; transition: .16s ease; }
+button:hover:not(:disabled), button:focus-visible { transform: translateX(6px); border-left-color: var(--saffron); background: rgba(217,145,37,.15); outline: none; }
+button:disabled { opacity: .35; cursor: not-allowed; }
+button.subtle { margin-top: .6rem; background: transparent; color: rgba(248,241,223,.6); font-size: .75rem; }
+
+.dialog { background: rgba(26, 22, 18, .96); border: 1px solid rgba(255,255,255,.1); padding: 1.4rem; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+.dialog.compact { width: min(90vw, 340px); display: grid; gap: .55rem; }
+.dialog h2 { margin: 0 0 1.2rem; font-family: Georgia, serif; font-size: 2rem; color: var(--saffron); }
+.mission-card { width: 100%; display: flex; gap: 1rem; margin-bottom: .7rem; align-items: center; }
+.mission-card > span { color: var(--saffron); font-size: 1.25rem; }
+.mission-card div { display: flex; flex-direction: column; gap: .2rem; }
+.mission-card small { color: rgba(248,241,223,.58); text-transform: none; letter-spacing: 0; font-weight: 500; }
+.setting-row { display: flex; justify-content: space-between; align-items: center; padding: .9rem 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+.setting-row input[type="range"] { width: 150px; }
+
+#hud { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
+.hidden { display: none !important; }
+.hud-top { position: absolute; left: 1.25rem; right: 1.25rem; top: 1.1rem; display: flex; justify-content: space-between; align-items: flex-start; }
+.status-card { min-width: 240px; background: linear-gradient(90deg, rgba(14,12,10,.82), rgba(14,12,10,.3)); padding: .75rem .9rem; border-left: 3px solid var(--saffron); }
+.health-row { display: flex; align-items: center; gap: .7rem; font-size: .68rem; letter-spacing: .12em; font-weight: 800; }
+.health-track { width: 130px; height: 8px; background: rgba(255,255,255,.15); }
+#health-fill { width: 100%; height: 100%; background: #c9503d; }
+.money { margin-top: .55rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.25rem; }
+.wanted { font-size: 1.5rem; color: var(--saffron); letter-spacing: .15em; text-shadow: 0 2px 6px #000; }
+
+.objective-card { position: absolute; top: 1.1rem; left: 50%; transform: translateX(-50%); width: min(480px, 52vw); padding: .75rem 1rem; text-align: center; background: rgba(14,12,10,.76); border-bottom: 3px solid var(--saffron); }
+.objective-card small { display: block; color: var(--saffron); letter-spacing: .14em; font-weight: 900; }
+.objective-card strong { display: block; font-family: Georgia, serif; font-size: 1.1rem; margin-top: .15rem; }
+.objective-card p { margin: .25rem 0 0; color: rgba(248,241,223,.76); font-size: .83rem; }
+
+.interaction-prompt { position: absolute; left: 50%; bottom: 18%; transform: translateX(-50%); padding: .55rem .8rem; border: 1px solid rgba(255,255,255,.16); background: rgba(14,12,10,.82); font-size: .85rem; }
+kbd { display: inline-grid; place-items: center; min-width: 24px; padding: .12rem .3rem; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08); font: 700 .72rem ui-monospace, monospace; }
+.toast { opacity: 0; position: absolute; left: 50%; top: 22%; transform: translate(-50%, -8px); background: rgba(170,53,41,.92); padding: .7rem 1.1rem; font-weight: 800; transition: .2s ease; }
+.toast.visible { opacity: 1; transform: translate(-50%, 0); }
+.controls-help { position: absolute; left: 1.25rem; bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: .5rem .9rem; max-width: 560px; color: rgba(248,241,223,.62); font-size: .7rem; }
+#minimap { position: absolute; right: 1.25rem; bottom: 1.25rem; width: 160px; height: 160px; border: 3px solid rgba(248,241,223,.72); border-radius: 50%; background: rgba(14,12,10,.72); box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+
+@media (max-width: 720px) {
+  .menu-panel { margin: 0 auto; padding: 1.5rem; }
+  .title-stack.large { margin-bottom: 2rem; }
+  .objective-card { top: auto; bottom: 6rem; width: calc(100% - 2rem); }
+  #minimap { width: 112px; height: 112px; }
+  .controls-help { display: none; }
+  .status-card { min-width: 190px; }
+  .health-track { width: 86px; }
+}
